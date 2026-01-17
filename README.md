@@ -29,7 +29,7 @@ on Arch Linux:
 
 4.`truncate -s 4393 TinySnake`
 
-## And now enjoy the game:
+## Enjoy the game:
 `./TinySnake`
 
 The game is only 4393 bytes in size.
