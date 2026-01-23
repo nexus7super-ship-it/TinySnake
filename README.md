@@ -27,7 +27,7 @@ on Arch Linux:
       
 3.`strip -s TinySnake`
 
-4.`truncate -s 4393 TinySnake` **(Warning this can destroy the game!)**
+4.`truncate -s 4393 TinySnake` **(Warning! this can destroy the game!** If you encounter a `Segmentation fault` or other errors, you should recompile the game and omit the truncate command.)
 
 ## Enjoy the game:
 `./TinySnake`
