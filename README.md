@@ -27,7 +27,7 @@ on Arch Linux:
       
 3.`strip -s TinySnake`
 
-4.`truncate -s 4393 TinySnake` (Warning this can destroy the game!)
+4.`truncate -s 4393 TinySnake` **(Warning this can destroy the game!)**
 
 ## Enjoy the game:
 `./TinySnake`
