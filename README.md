@@ -35,3 +35,6 @@ on Arch Linux:
 The game is only 4393 bytes in size.
 It's possible this could be a world record,
 but I think only if it's done very specifically.
+I don't know if it runs on any Linux distributions
+other than Kubuntu 25.10, which it was compiled on
+, as I haven't tested it. However, I think it would work.
