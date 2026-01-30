@@ -11,23 +11,13 @@ on Arch Linux:
 `sudo pacman -S base-devel`
 
 ## Now that we've checked that off the list, we can start compiling:
-1.`gcc -Os -fno-plt -fno-ident -fno-asynchronous-unwind-tables \
-  -fno-stack-protector -ffunction-sections -fdata-sections \
-  -fno-unwind-tables -fno-exceptions \
-  main.c -o TinySnake -lxcb \
-  -Wl,--gc-sections -Wl,--build-id=none -Wl,-z,norelro -Wl,-z,noseparate-code -s`
+1.`gcc -Os -fno-plt -fno-ident -fno-asynchronous-unwind-tables -fno-stack-protector -ffunction-sections -fdata-sections -fno-unwind-tables -fno-exceptions main.c -o TinySnake -lxcb -Wl,--gc-sections -Wl,--build-id=none -Wl,-z,norelro -Wl,-z,noseparate-code -s`
   
-2.`objcopy --remove-section=.note.gnu.property \
-      --remove-section=.note.ABI-tag \
-      --remove-section=.comment \
-      --remove-section=.gnu.version \
-      --remove-section=.gnu.hash \
-      --remove-section=.eh_frame \
-      TinySnake`
+2.`objcopy -R .note.gnu.property -R .note.ABI-tag -R .comment -R .gnu.version -R .gnu.hash -R .eh_frame TinySnake`
       
 3.`strip -s TinySnake`
 
-4.`truncate -s 4393 TinySnake` **(Warning! this can destroy the game!** If you encounter a `Segmentation fault` or other errors, you should recompile the game and omit the truncate command.)
+4.`truncate -s 4960 TinySnake` **(Warning! this can destroy the game!** If you encounter a `Segmentation fault` or other errors, you should recompile the game and omit the truncate command.)
 
 ## Enjoy the game:
 `./TinySnake`
