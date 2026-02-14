@@ -28,3 +28,6 @@ but I think only if it's done very specifically.
 I don't know if it runs on any Linux distributions
 other than Kubuntu 25.10, which it was compiled on
 , as I haven't tested it. However, I think it would work.
+
+> [!WARNING]
+> This repository is now a public archive and read-only!
