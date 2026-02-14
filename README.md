@@ -22,7 +22,7 @@ on Arch Linux:
 ## Enjoy the game:
 `./TinySnake`
 
-The game is only 4393 bytes in size.
+The game is only 4960 bytes in size.
 It's possible this could be a world record,
 but I think only if it's done very specifically.
 I don't know if it runs on any Linux distributions
