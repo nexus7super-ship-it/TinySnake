@@ -23,11 +23,18 @@ on Arch Linux:
 `./TinySnake`
 
 The game is only 4960 bytes in size.
-It's possible this could be a world record,
-but I think only if it's done very specifically.
-I don't know if it runs on any Linux distributions
-other than Kubuntu 25.10, which it was compiled on
-, as I haven't tested it. However, I think it would work.
+This could be a world record,
+at least on Linux as an X server window.
+I recently tested whether
+it also runs on platforms other than
+Kubuntu 25.10, and apparently
+it now runs on Fedora 43, and I think it
+most likely also runs on
+other platforms since the dependencies are
+just system stuff anyway.
 
-> [!WARNING]
-> This repository is now a public archive and read-only!
+## Stack
+
+- **Programming Language:** `C`
+- **Compiler:** `GCC`
+- **Utilities:** `objcopy` | `strip` | `truncate`
