@@ -1,13 +1,13 @@
 # TinySnake
 
 ## To compile the Snake game, you must install these dependencies immediately:
-on Linux Ubuntu/Debian:
+on Linux Ubuntu/Debian ($${\color{green}tested, \space its \space works}$$):
 `sudo apt install build-essential`
 
-on Linux Fedora:
+on Linux Fedora ($${\color{green}tested, \space its \space works}$$):
 `sudo dnf install @development-tools`
 
-on Arch Linux:
+on Arch Linux ($${\color{red} not \space tested}$$):
 `sudo pacman -S base-devel`
 
 ## Now that we've checked that off the list, we can start compiling:
