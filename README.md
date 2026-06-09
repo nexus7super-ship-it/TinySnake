@@ -1,10 +1,10 @@
 # TinySnake
 
 ## To compile the Snake game, you must install these dependencies immediately:
-on Linux Ubuntu/Debian ($${\color{green}tested, \space its \space works}$$):
+on Linux Ubuntu/Debian ($${\color{green}tested, \space its \space works on Kubuntu 25.10}$$):
 `sudo apt install build-essential`
 
-on Linux Fedora ($${\color{green}tested, \space its \space works}$$):
+on Linux Fedora 43 & 44 ($${\color{green}tested, \space its \space works}$$):
 `sudo dnf install @development-tools`
 
 on Arch Linux ($${\color{red} not \space tested}$$):
@@ -27,18 +27,13 @@ You can also use the pre-compiled package here. However, I recommend the latest 
 The game is only 4960 bytes in size.
 This could be a world record,
 at least on Linux as an X server window.
-I recently tested whether
-it also runs on platforms other than
-Kubuntu 25.10, and apparently
-it now runs on Fedora 43, and I think it
-most likely also runs on
-other platforms since the dependencies are
-just system stuff anyway.
+The prerequisites are a Linux desktop
+with X Server support.
 
 ## Stack
 
 - **Programming Language:** `C`
-- **Compiler:** `GCC`
+- **Compiler:** `GCC and all it flags`
 - **Utilities:** `objcopy` | `strip` | `truncate`
 
 ## Consider about this program
