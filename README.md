@@ -1,3 +1,4 @@
+# Important: Read this README file in its entirety.
 # TinySnake
 
 ## To compile the Snake game, you must install these dependencies immediately:
