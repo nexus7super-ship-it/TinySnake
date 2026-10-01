@@ -2,3 +2,5 @@
 
 TinySnake
 TinySnake-bundle/
+tests/unit
+tests/e2e

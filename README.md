@@ -1,12 +1,12 @@
 # TinySnake
 
-A complete Snake game for Linux in **4259 bytes**: a real X11 window, keyboard
-control, pause, restart and a win condition. It is written in plain C against
+A complete Snake game for Linux in **4540 bytes**: a real X11 window, keyboard
+control, a score display, pause, restart and a win condition. It is written in plain C against
 XCB and squeezed with nothing more than GCC and binutils.
 
 There are two ways to build it:
 
-- **Ultra-trimmed** (`make`, the default): the tiny 4259-byte binary. It uses
+- **Ultra-trimmed** (`make`, the default): the tiny 4540-byte binary. It uses
   the libraries installed on your system.
 - **Bundle** (`make bundle`): a self-contained folder for maximum
   compatibility, which ships every shared library the game needs.
@@ -24,8 +24,9 @@ Plasma, Sway, ...) through **XWayland**, which those desktops ship by default.
 | `Space`    | Restart after a game over or a win     |
 | `Esc`      | Quit                                   |
 
-The snake gets faster as it grows. It turns dark green while the game is
-paused, gray when you lose and gold when you fill the whole 20 × 20 board.
+Your score is shown below the board. The snake gets faster as it grows. It
+turns dark green while the game is paused, gray when you lose and gold when
+you fill the whole 20 × 20 board.
 
 ## Building
 
@@ -53,7 +54,7 @@ That's it. The Makefile compiles, strips and trims the binary and prints its
 size at the end:
 
 ```
-TinySnake: 4259 bytes
+TinySnake: 4540 bytes
 ```
 
 The exact size can differ by a few bytes between compiler versions.
@@ -95,7 +96,7 @@ The launcher runs the game through the bundled dynamic loader, so it doesn't
 use any library of the target system. You can copy the folder to another
 x86-64 Linux machine and run it there, even on distributions without glibc
 or without XCB (tested on Alpine Linux). The only requirements are the Linux
-kernel and an X server or XWayland. The bundle is about 4 MB, most of it glibc.
+kernel and an X server or XWayland. The bundle is about 3 to 4 MB, most of it glibc.
 
 ## How it gets so small
 
@@ -121,6 +122,26 @@ most of the bytes:
   could break the binary.
 - **Few library imports**: every imported function costs 60 to 90 bytes of ELF
   metadata, so the code avoids unnecessary library calls.
+- **No fonts**: the score digits come from a 3 × 5 pixel font stored in
+  20 bytes and are drawn with the same rectangle call as the snake.
+
+## Tests
+
+```sh
+make test       # unit tests of the game logic, no X server needed
+make test-e2e   # end-to-end tests of both builds
+```
+
+The end-to-end tests start the real binaries and play them with synthetic
+key presses. They check the drawing, the speed, pause, restart, quitting and
+closing the window. They run on their own private Xvfb server, never on your
+desktop, so they need Xvfb:
+
+| Distribution    | Command                                  |
+|-----------------|------------------------------------------|
+| Ubuntu / Debian | `sudo apt install xvfb`                  |
+| Fedora          | `sudo dnf install xorg-x11-server-Xvfb`  |
+| Arch Linux      | `sudo pacman -S xorg-server-xvfb`        |
 
 ## Security notes
 

@@ -24,7 +24,8 @@
 //
 // Controls: arrow keys steer, P pauses, R restarts, Space restarts after the
 // game has ended, Esc quits. The snake turns dark green while paused, gray
-// when it crashed and gold when it filled the whole board.
+// when it crashed and gold when it filled the whole board. The score is shown
+// below the board.
 
 #include <poll.h>
 #include <stdint.h>
@@ -33,7 +34,8 @@
 
 #define CELLS 20             // the board has CELLS x CELLS cells
 #define CELL  20             // size of one cell in pixels
-#define SIZE  (CELLS * CELL) // window width and height in pixels
+#define SIZE  (CELLS * CELL) // width and height of the board in pixels
+#define BAR   30             // height of the score bar below the board
 #define START 3              // initial length of the snake
 
 // Keysyms from <X11/keysymdef.h>. Left, Up, Right and Down are consecutive.
@@ -42,22 +44,31 @@
 
 enum { RUNNING, PAUSED, DEAD, WON };
 
-// The snake color depends on the game state, the food has its own color.
-#define FOOD (WON + 1)
-static const uint32_t colors[] = {
+// The snake color depends on the game state, the rest has fixed colors.
+enum { FOOD = WON + 1, SCORE, COLORS };
+static const uint32_t colors[COLORS] = {
     [RUNNING] = 0x00ff00,
     [PAUSED]  = 0x008000,
     [DEAD]    = 0x808080,
     [WON]     = 0xffd700,
     [FOOD]    = 0xff0000,
+    [SCORE]   = 0xc0c0c0,
 };
+
+// The digits 0-9 in a 3 x 5 pixel font: one bit per pixel, row by row,
+// starting with the top left pixel in bit 14.
+static const uint16_t digits[10] = {
+    0x7b6f, 0x2c97, 0x73e7, 0x73cf, 0x5bc9,
+    0x79cf, 0x79ef, 0x7249, 0x7bef, 0x7bcf,
+};
+#define PIXEL 4 // size of one font pixel on the screen
 
 typedef struct { int x, y; } Point;
 
 static xcb_connection_t *conn;
 static xcb_window_t win;
 static xcb_gcontext_t gc;
-static uint32_t pixels[FOOD + 1]; // colors as pixel values of the display
+static uint32_t pixels[COLORS]; // colors as pixel values of the display
 
 static Point snake[CELLS * CELLS]; // snake[0] is the head
 static int len, state;
@@ -165,6 +176,31 @@ static xcb_rectangle_t cell_rect(Point p)
     return (xcb_rectangle_t){ p.x * CELL, p.y * CELL, CELL - 1, CELL - 1 };
 }
 
+// Draws the line that marks the bottom wall and the score as 3 digits in the
+// bar below it. The bar is only cleared when the score changes, so it doesn't
+// flicker.
+static void draw_score(void)
+{
+    static int shown = -1;
+    static xcb_rectangle_t rects[1 + 3 * 15]; // static: makes the code smaller
+    int n = 0, score = len - START;
+
+    if (score != shown) {
+        xcb_clear_area(conn, 0, win, 0, SIZE + 1, 0, 0);
+        shown = score;
+    }
+    rects[n++] = (xcb_rectangle_t){ 0, SIZE, SIZE, 1 };
+    for (int i = 0; i < 3; i++, score /= 10) { // from right to left
+        int x = 46 - i * 18;
+        for (int b = 0; b < 15; b++)
+            if (digits[score % 10] >> (14 - b) & 1)
+                rects[n++] = (xcb_rectangle_t){ x + b % 3 * PIXEL,
+                                                SIZE + 5 + b / 3 * PIXEL,
+                                                PIXEL, PIXEL };
+    }
+    fill(pixels[SCORE], n, rects);
+}
+
 // Only vacated cells are cleared (in step and reset), so nothing flickers.
 static void draw(void)
 {
@@ -175,6 +211,7 @@ static void draw(void)
     for (int i = 0; i < len; i++)
         rects[i] = cell_rect(snake[i]);
     fill(pixels[state], len, rects);
+    draw_score();
     xcb_flush(conn);
 }
 
@@ -203,7 +240,7 @@ int main(void)
     win = xcb_generate_id(conn);
     uint32_t values[] = { screen->black_pixel, XCB_EVENT_MASK_KEY_PRESS };
     xcb_create_window(conn, XCB_COPY_FROM_PARENT, win, screen->root, 0, 0,
-                      SIZE, SIZE, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      SIZE, SIZE + BAR, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       screen->root_visual,
                       XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
     xcb_change_property(conn, XCB_PROP_MODE_REPLACE, win, XCB_ATOM_WM_NAME,
@@ -213,7 +250,7 @@ int main(void)
     // x, y, width, height, min_width, min_height, max_width, max_height, ...
     // Setting the min and max size to the same value makes the window fixed.
     uint32_t hints[18] = { [0] = 1 << 4 | 1 << 5, // PMinSize | PMaxSize
-                           [5] = SIZE, SIZE, SIZE, SIZE };
+                           [5] = SIZE, SIZE + BAR, SIZE, SIZE + BAR };
     xcb_change_property(conn, XCB_PROP_MODE_REPLACE, win,
                         XCB_ATOM_WM_NORMAL_HINTS, XCB_ATOM_WM_SIZE_HINTS, 32,
                         18, hints);
@@ -223,7 +260,7 @@ int main(void)
 
     // Let the X server translate the colors, so they are also right on
     // displays that aren't 24-bit TrueColor.
-    for (int i = 0; i <= FOOD; i++) {
+    for (int i = 0; i < COLORS; i++) {
         uint32_t c = colors[i];
         xcb_alloc_color_reply_t *color = xcb_alloc_color_reply(
             conn,
