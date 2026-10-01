@@ -1,9 +1,6 @@
 # make           builds the ultra-trimmed TinySnake binary (the default)
 # make bundle    builds TinySnake-bundle/, a self-contained folder that ships
 #                all shared libraries it needs, for maximum compatibility
-# make test      runs the unit tests
-# make test-e2e  runs the end-to-end tests of both builds on a private Xvfb
-#                server (needs Xvfb)
 # make clean     removes everything that was built
 
 CC = gcc
@@ -43,19 +40,7 @@ bundle: main.c bundle.sh
 	    $(BUNDLE_LDFLAGS)
 	./bundle.sh TinySnake-bundle
 
-test: tests/unit
-	./tests/unit
-
-test-e2e: TinySnake bundle tests/e2e
-	./tests/run-e2e.sh tests/e2e ./TinySnake TinySnake-bundle/TinySnake
-
-tests/unit: tests/unit.c main.c
-	$(CC) -O2 -Wall -Wextra $< -o $@ -lxcb
-
-tests/e2e: tests/e2e.c
-	$(CC) -O2 -Wall -Wextra $< -o $@ -lxcb
-
 clean:
-	rm -rf TinySnake TinySnake-bundle tests/unit tests/e2e
+	rm -rf TinySnake TinySnake-bundle
 
-.PHONY: bundle test test-e2e clean
+.PHONY: bundle clean

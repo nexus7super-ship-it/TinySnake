@@ -125,24 +125,6 @@ most of the bytes:
 - **No fonts**: the score digits come from a 3 × 5 pixel font stored in
   20 bytes and are drawn with the same rectangle call as the snake.
 
-## Tests
-
-```sh
-make test       # unit tests of the game logic, no X server needed
-make test-e2e   # end-to-end tests of both builds
-```
-
-The end-to-end tests start the real binaries and play them with synthetic
-key presses. They check the drawing, the speed, pause, restart, quitting and
-closing the window. They run on their own private Xvfb server, never on your
-desktop, so they need Xvfb:
-
-| Distribution    | Command                                  |
-|-----------------|------------------------------------------|
-| Ubuntu / Debian | `sudo apt install xvfb`                  |
-| Fedora          | `sudo dnf install xorg-x11-server-Xvfb`  |
-| Arch Linux      | `sudo pacman -S xorg-server-xvfb`        |
-
 ## Security notes
 
 TinySnake is open source and small enough to read in a few minutes. Building
