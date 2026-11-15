@@ -36,7 +36,7 @@ You need GCC, binutils, make and the XCB development files:
 
 | Distribution         | Command                                             | Tested |
 |----------------------|-----------------------------------------------------|--------|
-| Ubuntu / Debian      | `sudo apt install build-essential libxcb1-dev`      | ✅ Ubuntu 25.10 |
+| Ubuntu / Debian      | `sudo apt install build-essential libxcb1-dev`      | ✅ Ubuntu 25.10 and Ubuntu 26.04.1 LTS |
 | Fedora               | `sudo dnf install @development-tools libxcb-devel`  | ✅ Fedora 44 |
 | Arch Linux           | `sudo pacman -S base-devel libxcb`                  | ❌ not tested |
 
